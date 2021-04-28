@@ -3,6 +3,7 @@ const butt = document.querySelector('.butt')
 const inp = document.querySelector('.inp')
 const out = document.querySelector('.out')
 const message_error = document.querySelector('.message_error')
+const loading_spinner = document.querySelector('.loading_spinner')
 
 let nickname = ''
 
@@ -11,8 +12,8 @@ fetch(url_com + url)
 // .then(response=> response.ok ? response.json() : console.error(response))
 .then(response=> response.ok ? response.json() :Promise.reject(response))
 .then(data=>{
-    console.log(data);
-   console.log('Start'); 
+//     console.log(data);
+//    console.log('Start'); 
     out.innerHTML = `
     <div><img src='${data.avatar_url}'></div>
     <div>${data.location?data.location:'Локация не указана'}</div>
@@ -22,7 +23,7 @@ fetch(url_com + url)
 })
 .catch(e=>{
  console.log(e);
-
+    create_message_error("Такого пользователя не существует.")
  e.text()
  .then(req=>{
      console.log(req);
@@ -43,9 +44,20 @@ const create_message_error = message => {
 }
 // create_message_error()
 
+const loading = (text)=>{
+    loading_spinner.innerHTML = text
+
+}
+
 butt.addEventListener('click',e=>{
-   
-    inp.value.trim()?get_User_GitHub(inp.value.trim()):create_message_error( 'Поле не может быть пустым')
+
+    loading(`<img src="./spinner.gif">`) 
+    setTimeout(() => {
+        loading("")
+        inp.value.trim()?get_User_GitHub(inp.value.trim()) :create_message_error( 'Поле не может быть пустым')
+    }, 2000);
+
+
 })
  
 //Вывести текст ошибки (при неверном нике), поставить spinner (загрузка)
